@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    stages {
+        // Stage to checkout the code from Git
+        stage('Checkout Code') {
+            steps {
+                git url: 'https://github.com/username/repositoryname.git', branch: 'main'
+            }
+        }
+
+        // Stage to compile the Java program
+        stage('Compile Java Program') {
+            steps {
+                script {
+                    // Compile the CharacterCounter.java file into a .class file
+                    sh 'javac CharacterCounter.java'
+                }
+            }
+        }
+
+        // Stage to run the Java program
+        stage('Run Java Program') {
+            steps {
+                script {
+                    // Pass input via arguments instead of relying on interactive input
+                    sh 'java CharacterCounter "Some input"'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Build completed successfully!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
